@@ -56,3 +56,19 @@ resource "cdo_ftd_device_onboarding" "ftd" {
   ftd_uid    = cdo_ftd_device.ftd.id
   depends_on = [null_resource.configure_ftd_manager]
 }
+
+data "cdo_tenant" "current" {}
+
+data "cdo_sdc" "sdc" {
+  name = "${data.cdo_tenant.current.human_readable_name}-sdc"
+}
+
+resource "cdo_asa_device" "asa" {
+  name               = "my-asa"
+  connector_type     = "SDC"
+  connector_name     = data.cdo_sdc.sdc.name
+  username           = var.asa_username
+  password           = var.asa_password
+  socket_address     = "${var.asa_mgmt_if_address}:443"
+  ignore_certificate = false
+}
