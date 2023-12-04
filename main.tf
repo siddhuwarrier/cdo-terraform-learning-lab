@@ -30,6 +30,9 @@ resource "cdo_ftd_device" "ftd" {
   licenses           = ["BASE"]
   virtual            = true
   performance_tier   = "FTDv5"
+  lifecycle {
+    ignore_changes = [virtual]
+  }
 }
 
 resource "null_resource" "configure_ftd_manager" {
